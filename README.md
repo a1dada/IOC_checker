@@ -1,2 +1,5 @@
-# IOC_checker
-This program was created to help information security specialists investigate incidents and analyze information security events.
+# SOC_helper
+Данная программа по плану разработчика необходима для помощи аналитикам для автоматизации рутинной обработки алертов и написания однотипных отчетов для инцидентов для таки СЗИ как Kaspersky Anti Targeted Attack Platform (EDR (KATA)) и Kaspersky Unified Monitoring and Analysis Platform.
+Также в ней содержатся специальные утилиты для анализа атрибутов, их значений и маломальски реализованный TI, проверка на Virus Total и прочие вещи.
+На текущий момент реализован функционал:
+- 

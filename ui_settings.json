@@ -1,0 +1,6 @@
+{
+  "theme": "paper",
+  "overrides": {
+    "BTN_COLOR": "#00a6bd"
+  }
+}
