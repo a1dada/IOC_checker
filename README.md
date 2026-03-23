@@ -1,98 +1,112 @@
 # SOC Helper
 
-**SOC Helper** — это настольное приложение на Python/Tkinter для повседневной работы аналитика ИБ: обогащения IOC, декодирования технических артефактов, проверки CVE, разбора атрибутов Active Directory и выполнения вспомогательных SOC-задач в одном интерфейсе.
-<img width="1274" height="628" alt="image" src="https://github.com/user-attachments/assets/9ddd429b-e680-4af6-aa9d-2d9bc349f114" />
+SOC Helper is a desktop application designed for information security analysts, combining tools for IOC analysis, Windows/Active Directory attribute decoding, vulnerability assessment, and technical value interpretation within a single interface.  
+
+The application eliminates the need to use multiple fragmented services and utilities by providing a unified workspace for daily analysis, investigations, and incident handling.
+
+<img width="1288" height="689" alt="image" src="https://github.com/user-attachments/assets/5b6b1639-8fbd-40ba-8576-d397dce35dfe" />
+
+---
+
+## Functionality
+
+### IOC Analysis and Enrichment
+
+The application provides a comprehensive set of tools for analyzing indicators of compromise:
+
+<img width="1268" height="718" alt="image" src="https://github.com/user-attachments/assets/492b9771-9637-4b69-a4e6-0a5c623bcd50" />
 
 
-## Возможности
+- analysis of URLs, domains, and IP addresses  
+- DNS information retrieval (A, MX, NS, TXT, SPF)  
+- HTTP/HTTPS analysis (redirects, headers, cookies, server details)  
+- TLS/SSL certificate inspection  
+- WHOIS data retrieval  
+- IP geolocation and provider identification  
+- execution of network commands (ping, traceroute, nslookup, etc.)
+  
+<img width="1271" height="721" alt="image" src="https://github.com/user-attachments/assets/5ba09cb7-b7f3-43ae-9cbd-d20a5107843e" />
 
-### Обогащение IOC
+Integrations:
 
-В приложении есть отдельный раздел для обогащения индикаторов компрометации. В текущей структуре интерфейса доступны модули **VirusTotal**, **Link analyzer**, **URLScan**, **Email reputation** и **CVE info**. Это позволяет проверять хэши, IP, домены и URL, разбирать веб-ресурсы и быстро получать сводную информацию по уязвимостям из одного окна. :contentReference[oaicite:1]{index=1}
+- **VirusTotal** — IOC analysis across multiple antivirus engines  
+- **AbuseIPDB** — IP abuse and reputation data  
+- **AlienVault OTX** — threat intelligence and pulse data  
+- **URLScan** — web page analysis and behavioral inspection  
 
-**VirusTotal-модуль** — один из центральных элементов приложения. По коду он реализован как много-вкладочный интерфейс: внутри есть отдельные вкладки для информации, антивирусного анализа, IP info и malware-данных, а основной быстрый чек объединяет сразу несколько источников, включая **VirusTotal, AbuseDB, OTX и Censys**. Это делает модуль не просто VT-клиентом, а компактным TI-агрегатором для первичного анализа IOC. :contentReference[oaicite:2]{index=2}
+<img width="1493" height="899" alt="image" src="https://github.com/user-attachments/assets/48d15d0d-a849-4157-8851-b13e16e2843d" />
 
-**URLScan-модуль** предназначен для анализа веб-страниц через urlscan.io. В коде видно, что он поддерживает работу со скриншотом результата анализа и дополнительно выводит статус проверки через **Google Safe Browsing**, что делает его полезным для быстрой проверки подозрительных сайтов и ссылок. :contentReference[oaicite:3]{index=3}
+---
 
-**Email reputation-модуль** ориентирован на анализ email-адресов и связанных с ними данных через **AlienVault OTX**. В интерфейсе есть вывод pulse-данных, TLP, reference-ссылок, а также отдельные быстрые переходы к проверке email и домена в OTX. Это удобно для расследований почтовых инцидентов и фишинга. :contentReference[oaicite:4]{index=4}
+### Vulnerability Analysis (CVE)
 
-**CVE info** — модуль для просмотра информации по CVE. По коду он умеет собирать и отображать основные сведения об уязвимости и добавляет прямые ссылки на **Vulners**, **CVE.org** и **NVD/NIST**, что удобно для быстрого перехода от идентификатора CVE к техническим деталям и первоисточникам. :contentReference[oaicite:5]{index=5}
+A dedicated module for working with CVEs allows:
 
-**Link analyzer** включён в общую навигацию приложения как отдельный модуль для анализа ссылок и доменов. Он расположен рядом с VirusTotal и URLScan и логически дополняет общий блок IOC enrichment. :contentReference[oaicite:6]{index=6}
+<img width="1487" height="892" alt="image" src="https://github.com/user-attachments/assets/0db5b487-374a-4826-94c2-ed7329094855" />
 
-### Разбор атрибутов и служебных значений
+- retrieving vulnerability descriptions  
+- quick navigation to sources (NVD, CVE.org, Vulners)  
+- using CVE data as part of incident analysis  
 
-В отдельный раздел вынесены модули для разбора атрибутов и значений, часто встречающихся в расследованиях, аудитах и работе с Active Directory:
+---
 
-- `ms-Mcs-AdmPwdExpirationTime`
-- `msDS-SupportedEncryptionTypes`
-- `Netlogon Error Codes`
-- `UAC Decode`
-- `COM Objects`
-- `SID Decoder`
-- `SDDL Decoder` :contentReference[oaicite:7]{index=7}
+### Active Directory and Windows Attribute Analysis
 
-**UAC Decode** помогает интерпретировать флаги `UserAccountControl`, формирует описание типа учётной записи, её состояния и выводит пояснения по установленным битам. Кроме самого декодирования в модуле есть таблица со значениями, десятичным представлением, hex-формой и описанием флагов. :contentReference[oaicite:8]{index=8}
+The application includes a set of decoders and analyzers for commonly encountered attributes and values:
 
-**msDS-SupportedEncryptionTypes** предназначен для разбора поддерживаемых типов шифрования в AD. В коде явно предусмотрено представление значений в десятичной и hex-форме и текстовое описание алгоритмов, а отдельные варианты помечаются как потенциально проблемные, например RC4 и DES. :contentReference[oaicite:9]{index=9}
+<img width="1494" height="916" alt="image" src="https://github.com/user-attachments/assets/0332531a-f6b5-4228-831a-30055286bb9a" />
 
-**Netlogon Error Codes** даёт справочную расшифровку кодов Netlogon и выводит поясняющий текст, который можно использовать в анализе событий аутентификации и диагностике доменных проблем. :contentReference[oaicite:10]{index=10}
+- **ms-Mcs-AdmPwdExpirationTime** — interpretation of LAPS expiration time  
+- **msDS-SupportedEncryptionTypes** — analysis of Kerberos encryption types  
+- **UserAccountControl (UAC)** — decoding account control flags  
+- **Netlogon Error Codes** — interpretation of Netlogon errors  
+- **SID Decoder** — SID structure analysis  
+- **SDDL Decoder** — parsing of access control and security descriptors  
+- **COM Objects** — information about COM objects  
 
-**SID Decoder** декодирует SID, проверяет формат строки и выдаёт развернённое объяснение структуры SID, включая subauthorities и RID. В интерфейсе предусмотрены быстрые действия вроде вставки из буфера и немедленного декодирования. :contentReference[oaicite:11]{index=11}
+<img width="1484" height="695" alt="image" src="https://github.com/user-attachments/assets/12909615-932f-4652-bb16-4855398b5b79" />
 
-**SDDL Decoder** предназначен для разбора строк SDDL и сразу даёт кнопки на вставку, декодирование и очистку результата. :contentReference[oaicite:12]{index=12}
 
-**COM Objects** — отдельный модуль для работы с COM-объектами на основе локальной JSON-базы. По коду он загружает внутреннюю базу COM и предоставляет отдельные области для итогового отчёта, детализации объекта и интерфейсных сведений. :contentReference[oaicite:13]{index=13}
+These modules enable fast interpretation of values found in logs, alerts, and system configurations.
 
-### Декодеры и утилиты
+---
 
-В приложении есть отдельный раздел **«Декодеры»**, где доступны как общий блок декодеров, так и специализированный модуль **«Расшифровка IDS-артефактов»**. Это направление проекта рассчитано на ускорение рутинного анализа артефактов и значений, которые аналитик регулярно получает из алертов и журналов. :contentReference[oaicite:14]{index=14}
+### Artifact Decoding and Analysis
 
-### Задачи и личная организация
+Built-in decoders are designed to process technical values and artifacts:
 
-В блоке **Tasks and calendar** реализован встроенный **Task Manager**. По коду он хранит данные в `tasks.json` и использует также `notes.txt`, что позволяет вести локальный список задач и заметок прямо в приложении, не переключаясь на внешние инструменты. :contentReference[oaicite:15]{index=15}
+- transformation and parsing of various formats  
+- analysis of values from security events  
+- decoding IDS/IPS artifacts  
 
-### Настройки и кастомизация
+---
 
-Проект поддерживает пользовательские настройки интерфейса. В коде используются `apis.txt` для API-ключей и `ui_settings.json` для параметров интерфейса, а сами настройки опираются на эталонные темы и цветовые схемы. Это позволяет адаптировать внешний вид приложения и централизованно хранить ключи интеграций. :contentReference[oaicite:16]{index=16}
+### Task Management
 
-## Архитектура интерфейса
+The application includes a lightweight built-in task manager:
 
-Приложение построено как единое десктопное окно на **Tkinter** с боковой TreeView-навигацией и центральной рабочей областью. Каждый функциональный блок подключается как отдельный frame, а переключение между модулями происходит внутри одного GUI-сеанса. Такой подход делает SOC Helper удобным как «единый рабочий пульт» аналитика. :contentReference[oaicite:17]{index=17}
+- local task storage  
+- note-taking functionality  
+- quick access during analysis workflows  
 
-## Структура репозитория
+---
 
-Ключевые файлы проекта:
+### Settings
 
-- `main.py` — точка входа и сборка всего GUI
-- `virustotal.py` — IOC enrichment через VirusTotal и внешние TI-источники
-- `urlscan.py` — анализ URL и веб-страниц через urlscan.io
-- `email_reputation.py` — проверка email-репутации через OTX
-- `cve_check.py` — проверка и отображение данных по CVE
-- `link_analyzer.py` — анализ ссылок и доменов
-- `UserAccountControl.py` — декодер UAC
-- `msDS_SupportedEncryptionTypes.py` — разбор supported encryption types
-- `netlogon_errors.py` — расшифровка ошибок Netlogon
-- `com_object.py` — модуль анализа COM-объектов
-- `sid_decode.py` — декодер SID
-- `sddl_decode.py` — декодер SDDL
-- `ids_decode.py` — расшифровка IDS-артефактов
-- `taskmanager.py` — встроенный менеджер задач
-- `settings.py` — пользовательские настройки интерфейса
-- `soc_analyzer.exe` и `soc_analyzer.spec` — артефакты сборки desktop-версии :contentReference[oaicite:18]{index=18}
+<img width="1272" height="692" alt="image" src="https://github.com/user-attachments/assets/33fefd17-323d-4241-897d-61e26d078e55" />
 
-## Для кого этот проект
 
-SOC Helper подойдёт:
+The application supports flexible interface and user experience customization. Several predefined color themes are available (including four base themes), allowing the interface to be adapted to user preferences or working environments. In addition to theme selection, UI elements can be customized — including button color schemes and core interface components. All settings are stored locally and automatically applied on subsequent launches, ensuring a consistent and predictable user experience.
 
-- аналитикам SOC и CERT
-- специалистам incident response
-- threat intelligence и detection engineers
-- инженерам, которым нужен единый локальный toolkit для повседневной работы с IOC, атрибутами AD, декодированием и быстрым enrichment
+---
 
-## Запуск
+## Purpose
 
-Базовый сценарий запуска:
+SOC Helper is designed for:
 
-```bash
-python main.py
+- SOC analysts  
+- Incident Response specialists  
+- threat intelligence analysts  
+- detection engineers / blue team  
+
+The application simplifies routine analysis tasks and allows analysts to focus on data interpretation rather than data collection.
